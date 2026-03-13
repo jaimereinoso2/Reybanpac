@@ -1,3 +1,19 @@
+## Descripción de la tabla
+
+Esta tabla, llamada haciendas,  registra **mensualmente** los indicadores operativos, de costos y ambientales de cada hacienda bananera.
+
+**Granularidad:** un registro = una hacienda + un mes.
+
+**Identificación de la hacienda:** columna `Unidad` (código) y `Nombre_Unidad` (nombre legible).
+
+**Identificación del período:** columna `FECHA` en formato `DD/MM/YYYY`. Aunque el campo se llama FECHA, el reporte se emite **una vez por mes**, por lo que la fecha representa el mes completo de actividad. La columna `Semana` indica la semana del año en que se generó el reporte, no implica frecuencia semanal de los datos.
+
+**Cobertura temporal:** datos desde enero de 2020 hasta junio de 2025.
+
+**Regla de agregación:** para analizar lo ocurrido durante un año completo en una hacienda se deben **agrupar** los registros por año (extraído de `FECHA`) y por `Unidad`, sumando o promediando las métricas según corresponda. No existe un registro anual consolidado; el año se reconstruye acumulando los doce registros mensuales de cada hacienda.
+
+---
+
 | # | Columna | Descripción |
 | :--- | :--- | :--- |
 | 1 | **FECHA** | Fecha del registro de la actividad en formato dd/mm/yyyy. |
