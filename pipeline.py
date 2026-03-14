@@ -7,8 +7,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6")
+
+def _cfg(key: str, default: str = None) -> str:
+    """Lee de st.secrets si está disponible, sino de variables de entorno."""
+    try:
+        import streamlit as st
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key, default)
+
+
+client = anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
+CLAUDE_MODEL = _cfg("CLAUDE_MODEL", "claude-sonnet-4-6")
 
 SCHEMA_CONTEXT = """
 Tabla: haciendas
@@ -99,8 +109,8 @@ def _limpiar_sql(texto: str) -> str:
 
 def _conectar():
     return psycopg2.connect(
-        user=os.getenv("user"), password=os.getenv("password"),
-        host=os.getenv("host"), port=os.getenv("port"), dbname=os.getenv("dbname")
+        user=_cfg("user"), password=_cfg("password"),
+        host=_cfg("host"), port=_cfg("port"), dbname=_cfg("dbname")
     )
 
 
