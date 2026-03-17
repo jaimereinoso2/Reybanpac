@@ -15,8 +15,13 @@ def _cfg(key: str, default: str = None) -> str:
         return os.getenv(key, default)
 
 
-client = anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
-CLAUDE_MODEL = _cfg("CLAUDE_MODEL", "claude-sonnet-4-6")
+_client = None
+
+def _get_client():
+    global _client
+    if _client is None:
+        _client = anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
+    return _client
 
 CSV_PATH = os.path.join(os.path.dirname(__file__), "datos", "Base Haciendas Depurada.csv")
 DF_GLOBAL = pd.read_csv(CSV_PATH, sep=";", encoding="utf-8-sig")
@@ -94,8 +99,8 @@ COLUMNAS_VALIDAS_STR = ", ".join(f'"{c}"' for c in COLUMNAS_VALIDAS)
 # ─── helpers ────────────────────────────────────────────────────────────────
 
 def _llm(prompt: str) -> str:
-    message = client.messages.create(
-        model=CLAUDE_MODEL,
+    message = _get_client().messages.create(
+        model=_cfg("CLAUDE_MODEL", "claude-sonnet-4-6"),
         max_tokens=4096,
         messages=[{"role": "user", "content": prompt}]
     )
