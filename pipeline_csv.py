@@ -15,13 +15,8 @@ def _cfg(key: str, default: str = None) -> str:
         return os.getenv(key, default)
 
 
-_client = None
-
 def _get_client():
-    global _client
-    if _client is None:
-        _client = anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
-    return _client
+    return anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
 
 CSV_PATH = os.path.join(os.path.dirname(__file__), "datos", "Base Haciendas Depurada.csv")
 DF_GLOBAL = pd.read_csv(CSV_PATH, sep=";", encoding="utf-8-sig")
