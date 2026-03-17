@@ -1,5 +1,5 @@
 import streamlit as st
-from pipeline import ejecutar_pipeline
+from pipeline_csv import ejecutar_pipeline
 
 st.set_page_config(
     page_title="Análisis de Haciendas",
@@ -38,11 +38,10 @@ ejecutar = st.button("Analizar", type="primary", disabled=not pregunta.strip())
 if ejecutar and pregunta.strip():
     plan_placeholder = st.empty()
     pasos_placeholders = {}
-
-    eventos_recibidos = []
+    verificaciones_por_paso = {}  # {n: [evento, ...]}
+    correcciones_por_paso = {}    # {n: [evento, ...]}
 
     def on_evento(evento: dict):
-        eventos_recibidos.append(evento)
         tipo = evento["tipo"]
 
         if tipo == "plan_inicio":
@@ -57,27 +56,59 @@ if ejecutar and pregunta.strip():
 
         elif tipo == "paso_inicio":
             n = evento["numero"]
-            subtipo = evento["subtipo"].upper()
             actividad = evento["actividad"]
             pasos_placeholders[n] = st.empty()
-            pasos_placeholders[n].info(f"⏳ Paso {n} ({subtipo}): {actividad[:90]}...")
+            verificaciones_por_paso[n] = []
+            correcciones_por_paso[n] = []
+            pasos_placeholders[n].info(f"⏳ Paso {n}: {actividad[:90]}...")
+
+        elif tipo == "verificacion":
+            n = evento["numero"]
+            verificaciones_por_paso[n].append(evento)
+            if evento["estado"] in ("error_estatico", "error_ejecucion"):
+                pasos_placeholders[n].warning(
+                    f"🔍 Paso {n} — iteración {evento['intento']}: error detectado, corrigiendo..."
+                )
+
+        elif tipo == "correccion":
+            n = evento["numero"]
+            correcciones_por_paso[n].append(evento)
 
         elif tipo == "paso_listo":
             n = evento["numero"]
             paso = evento["paso"]
-            subtipo = paso["tipo"].upper()
-            lang = "sql" if paso["tipo"] == "sql" else "python"
+            vers = verificaciones_por_paso.get(n, [])
+            cors = correcciones_por_paso.get(n, [])
+            n_correcciones = sum(1 for v in vers if v["estado"] != "ok")
+
+            titulo = f"✅ Paso {n} — {paso['actividad'][:80]}"
+            if n_correcciones > 0:
+                titulo += f" ({n_correcciones} corrección{'es' if n_correcciones > 1 else ''})"
+
             with pasos_placeholders[n].container():
-                with st.expander(
-                    f"✅ Paso {n} ({subtipo}) — {paso['actividad'][:80]}",
-                    expanded=(n == 1),
-                ):
+                with st.expander(titulo, expanded=(n == 1)):
                     if paso["razonamiento"]:
                         st.markdown(f"**Razonamiento:** {paso['razonamiento']}")
-                    st.code(paso["codigo"], language=lang)
+                    st.code(paso["codigo"], language="python")
                     df_paso = paso["df_resultado"]
                     st.caption(f"{df_paso.shape[0]} filas × {df_paso.shape[1]} columnas")
                     st.dataframe(df_paso, use_container_width=True)
+
+                    # Historial de verificaciones y correcciones
+                    if n_correcciones > 0:
+                        with st.expander(f"🔍 Historial de verificación ({len(vers)} iteraciones)"):
+                            for ver in vers:
+                                if ver["estado"] == "ok":
+                                    st.success(f"Iteración {ver['intento']}: código correcto")
+                                else:
+                                    tipo_err = "Error estático" if ver["estado"] == "error_estatico" else "Error de ejecución"
+                                    st.error(f"Iteración {ver['intento']} — {tipo_err}:\n{ver['errores']}")
+                                    cor = next(
+                                        (c for c in cors if c["intento"] == ver["intento"]), None
+                                    )
+                                    if cor:
+                                        st.caption("Código corregido:")
+                                        st.code(cor["codigo"], language="python")
 
         elif tipo == "pipeline_listo":
             pass
