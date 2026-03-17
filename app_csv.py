@@ -5,7 +5,7 @@ st.set_page_config(
     page_title="Análisis de Haciendas",
     page_icon="🍌",
     layout="wide",
-)
+) 
 
 st.title("🍌 Análisis de Haciendas")
 st.markdown("Haz una pregunta en lenguaje natural sobre los datos de producción y costos.")
