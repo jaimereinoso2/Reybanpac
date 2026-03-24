@@ -1,11 +1,50 @@
+import os
 import streamlit as st
+from dotenv import load_dotenv
 from pipeline_csv import ejecutar_pipeline
+
+load_dotenv()
 
 st.set_page_config(
     page_title="Análisis de Haciendas",
     page_icon="🍌",
     layout="wide",
-) 
+)
+
+
+def _secret(key: str):
+    try:
+        return st.secrets[key]
+    except Exception:
+        return os.getenv(key)
+
+
+def _verificar_credenciales(usuario: str, password: str) -> bool:
+    i = 1
+    while True:
+        u = _secret(f"USUARIO{i}")
+        p = _secret(f"USUARIO{i}_PASS")
+        if u is None:
+            break
+        if usuario.strip() == u and password == p:
+            return True
+        i += 1
+    return False
+
+
+if not st.session_state.get("autenticado"):
+    st.title("🔐 Acceso")
+    usuario = st.text_input("Usuario")
+    password = st.text_input("Contraseña", type="password")
+    if st.button("Ingresar", type="primary"):
+        if _verificar_credenciales(usuario, password):
+            st.session_state["autenticado"] = True
+            st.session_state["usuario"] = usuario
+            st.rerun()
+        else:
+            st.error("Usuario o contraseña incorrectos.")
+    st.stop()
+
 
 st.title("🍌 Análisis de Haciendas")
 st.markdown("Haz una pregunta en lenguaje natural sobre los datos de producción y costos.")
