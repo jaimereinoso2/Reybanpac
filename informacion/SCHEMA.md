@@ -16,7 +16,7 @@ Esta tabla, llamada haciendas,  registra **mensualmente** los indicadores operat
 
 | # | Columna | Descripción |
 | :--- | :--- | :--- |
-| 1 | **FECHA** | Fecha del registro de la actividad en formato dd/mm/yyyy. |
+| 1 | **FECHA** | Fecha del registro de la actividad en formato dia (dd), mes (mm) y año (yyyy) representado asi dd/mm/yyyy
 | 2 | **Semana** | Número de semana del año. |
 | 3 | **Zona** | Región geográfica donde se ubica la hacienda. |
 | 4 | **Unidad** | Código identificador de la hacienda. |

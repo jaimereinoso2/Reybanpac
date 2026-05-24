@@ -1,7 +1,7 @@
 import os
 import json
 import pandas as pd
-import anthropic
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,11 +14,7 @@ def _cfg(key: str, default: str = None) -> str:
     except Exception:
         return os.getenv(key, default)
 
-
-def _get_client():
-    return anthropic.Anthropic(api_key=_cfg("ANTHROPIC_API_KEY"))
-
-CSV_PATH = os.path.join(os.path.dirname(__file__), "datos", "Base Haciendas Depurada.csv")
+CSV_PATH = os.path.join(os.path.dirname(__file__), "datos", "Base Haciendas Depurada_procesado.csv")
 DF_GLOBAL = pd.read_csv(CSV_PATH, sep=";", encoding="utf-8-sig")
 DF_GLOBAL["FECHA"] = pd.to_datetime(DF_GLOBAL["FECHA"])
 
@@ -93,13 +89,11 @@ COLUMNAS_VALIDAS_STR = ", ".join(f'"{c}"' for c in COLUMNAS_VALIDAS)
 
 # ─── helpers ────────────────────────────────────────────────────────────────
 
-def _llm(prompt: str) -> str:
-    message = _get_client().messages.create(
-        model=_cfg("CLAUDE_MODEL", "claude-sonnet-4-6"),
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return message.content[0].text.strip()
+def _llm(prompt: str, model: str = None) -> str:
+    model = model or _cfg("GEMINI_MODEL_CODE", "gemini-2.5-flash")
+    client = genai.Client(api_key=_cfg("GEMINI_API_KEY"))
+    response = client.models.generate_content(model=model, contents=prompt)
+    return response.text.strip()
 
 
 def _limpiar_codigo(texto: str) -> str:
@@ -123,18 +117,36 @@ def _info_dfs(dfs: dict) -> str:
 
 # ─── planificador ────────────────────────────────────────────────────────────
 
+def _fecha_referencia() -> str:
+    """Último mes en los datos — equivalente al 'hoy' para el análisis."""
+    fecha = DF_GLOBAL["FECHA"].max()
+    meses_es = {
+        1: "enero", 2: "febrero", 3: "marzo", 4: "abril",
+        5: "mayo", 6: "junio", 7: "julio", 8: "agosto",
+        9: "septiembre", 10: "octubre", 11: "noviembre", 12: "diciembre",
+    }
+    return f"{fecha.strftime('%Y-%m-%d')} ({meses_es[fecha.month]} {fecha.year})"
+
+
 def hacer_plan(pregunta: str) -> list[str]:
     """
     Genera un plan donde cada paso produce un DataFrame nombrado df_pasoN.
     El paso 1 siempre lee de DF_GLOBAL.
     Los pasos siguientes pueden operar sobre cualquier df_pasoX anterior.
     """
+    fecha_ref = _fecha_referencia()
     prompt = f"""Eres un experto en análisis de datos con pandas para Python.
 
 Tienes un DataFrame global llamado `DF_GLOBAL` con las columnas:
 {COLUMNAS_VALIDAS_STR}
 
 La columna FECHA es datetime64.
+
+FECHA DE REFERENCIA (equivalente al "hoy"): {fecha_ref}
+Cualquier expresión temporal relativa del usuario ("últimos 6 meses", "último trimestre",
+"mes actual", "año en curso", etc.) debe calcularse hacia atrás desde esta fecha,
+NO desde la fecha real del sistema.
+Ejemplo: si la fecha de referencia es 2025-01-01, "los últimos 6 meses" es agosto 2024 – enero 2025.
 
 El usuario pregunta: "{pregunta}"
 
@@ -153,7 +165,7 @@ Responde ÚNICAMENTE con un JSON array de strings, sin markdown. Ejemplo:
   "df_paso3: Ordenar df_paso2 por costo_por_caja descendente y tomar top 5"
 ]"""
 
-    texto = _llm(prompt)
+    texto = _llm(prompt, model=_cfg("GEMINI_MODEL_REASONING", "gemini-2.5-pro"))
     if texto.startswith("```"):
         texto = texto.split("```")[1]
         if texto.startswith("json"):
@@ -166,8 +178,14 @@ Responde ÚNICAMENTE con un JSON array de strings, sin markdown. Ejemplo:
 def generar_codigo_paso(actividad: str, pregunta_original: str, numero_paso: int, dfs_disponibles: dict) -> tuple[str, str]:
     output_var = f"df_paso{numero_paso}"
     info = _info_dfs(dfs_disponibles)
+    fecha_ref = _fecha_referencia()
 
     prompt = f"""Eres un experto en análisis de datos con pandas para Python y en el negocio bananero.
+
+FECHA DE REFERENCIA (equivalente al "hoy"): {fecha_ref}
+Cualquier expresión temporal relativa ("últimos N meses", "último trimestre", "mes actual",
+"año en curso", etc.) debe calcularse hacia atrás desde esta fecha en el código pandas,
+NO desde la fecha real del sistema (no uses pd.Timestamp.now() ni datetime.today()).
 
 DataFrames disponibles:
 {info}

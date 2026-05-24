@@ -1,0 +1,64 @@
+{
+  "sesiones": {
+    "48a7d4d3": {
+      "id": "48a7d4d3",
+      "nombre": "Sesión inicial",
+      "creada": "2026-05-23T16:50:04.937261",
+      "interacciones": [
+        {
+          "pregunta": "¿Cuáles son las 5 haciendas con mayor costo por hectárea en 2024?",
+          "interpretacion": "En 2024, la Hacienda Union I se posiciona como la hacienda con el mayor costo por hectárea, registrando $1,848.24. Le siguen Hacienda San Carlos con $1,613.31 y Hacienda Calope con $1,588.09, ambas con costos superiores a los $1,500 por hectárea. Las haciendas Maravilla III ($1,284.52) y Admiracion ($1,260.02) completan el top 5 de las unidades con mayor costo por hectárea. Esta distribución muestra una brecha considerable de casi $600 entre el costo más alto y el quinto puesto. Estas cifras sugieren la necesidad de una revisión en profundidad de los factores que impulsan los costos operativos en estas unidades productivas.",
+          "timestamp": "2026-05-23T16:51:44.235610"
+        },
+        {
+          "pregunta": "¿Cuáles son las 5 haciendas con menor costo por hectárea en 2024?",
+          "interpretacion": "Para el año 2024, las cinco haciendas con el menor costo por hectárea son las siguientes:\n\n1.  **Hacienda Union II**, con un costo de 0.00. Este valor inusualmente bajo podría requerir una revisión de los registros para confirmar la exactitud de los datos.\n2.  **Hacienda Zulema**, con 854.12 por hectárea.\n3.  **Hacienda San Simon**, con 861.93 por hectárea.\n4.  **Hacienda Vanguardia**, con 905.18 por hectárea.\n5.  **Hacienda Oasis II**, con 948.40 por hectárea.\n\nEstas haciendas demuestran una gestión de costos por hectárea notablemente eficiente, manteniéndose por debajo de los 950 en el período analizado.",
+          "timestamp": "2026-05-23T16:56:42.805887"
+        }
+      ],
+      "resumen": null
+    },
+    "b714565a": {
+      "id": "b714565a",
+      "nombre": "Sesión 2",
+      "creada": "2026-05-23T16:57:33.441242",
+      "interacciones": [
+        {
+          "pregunta": "¿Qué zonas tienen mayor incidencia de Sigatoka?",
+          "interpretacion": "Según los datos, la **Zona San Camilo** presenta la mayor incidencia promedio de Sigatoka, con 321.59, destacándose significativamente sobre el resto. Le sigue la Zona Valencia, con 198.80, y la Zona Camarones con 153.43. Estas zonas requieren una atención prioritaria para mitigar los riesgos de producción y controlar los costos fitosanitarios, ya que una alta incidencia suele traducirse en mayores pérdidas y gastos de aplicación. En contraste, la Zona San Juan muestra la menor incidencia con 52.08.",
+          "timestamp": "2026-05-23T16:58:20.215900"
+        },
+        {
+          "pregunta": "¿Qué zonas tienen mayor incidencia de Sigatoka?",
+          "interpretacion": "Según los datos, **Zona San Camilo** registra la mayor incidencia de Sigatoka, con un valor de **729.20**. Le siguen **Zona Fumisa** con **614.50** y **Zona Camarones** con **594.65**, mostrando una prevalencia considerablemente más alta que las demás zonas. Por el contrario, **Zona San Juan** presenta la menor incidencia, con solo **167.98**. Esta concentración en San Camilo, Fumisa y Camarones sugiere que estas áreas requieren una atención prioritaria en las estrategias de control fitosanitario para mitigar los riesgos en la producción y costos operativos.",
+          "timestamp": "2026-05-23T16:59:13.552112"
+        },
+        {
+          "pregunta": "¿Qué zonas tienen menor incidencia de Sigatoka?",
+          "interpretacion": "Analizando los datos, la **Zona San Juan** presenta la menor incidencia de Sigatoka, con un valor de **167.98**. Le siguen la Zona Valencia (428.57) y la Zona Vergel (490.37), mostrando también valores relativamente bajos en comparación con el resto. Por otro lado, la Zona San Camilo registra la incidencia más alta (729.20). Esto indica que la Zona San Juan está gestionando o experimentando un control de la enfermedad significativamente más eficiente.",
+          "timestamp": "2026-05-23T17:00:32.045148"
+        },
+        {
+          "pregunta": "¿Hay alguna zona sin incidencia de Sigatoka?",
+          "interpretacion": "Según nuestros análisis, no se ha encontrado ninguna zona registrada que presente cero incidencia de Sigatoka en el periodo analizado. El resultado de la consulta muestra un DataFrame vacío, lo que indica que todas las zonas monitoreadas tienen algún nivel de presencia de esta enfermedad. Esto subraya la relevancia del control de Sigatoka como un proceso productivo crítico en todas las regiones operativas.",
+          "timestamp": "2026-05-23T17:02:05.658837"
+        }
+      ],
+      "resumen": null
+    },
+    "0609df64": {
+      "id": "0609df64",
+      "nombre": "Sesión 3",
+      "creada": "2026-05-23T19:45:07.720750",
+      "interacciones": [
+        {
+          "pregunta": "cuantas regiones hay?",
+          "interpretacion": "Reybanpac opera en **6 regiones geográficas** distintas, lo que es clave para el monitoreo y la toma de decisiones a nivel regional. Estas zonas incluyen: Zona Camarones, Zona Fumisa, Zona San Camilo, Zona San Juan, Zona Valencia y Zona Vergel. Esta diversidad geográfica permite evaluar el desempeño por área y optimizar las inversiones estratégicas.",
+          "timestamp": "2026-05-23T19:45:53.976339"
+        }
+      ],
+      "resumen": null
+    }
+  },
+  "sesion_activa": "0609df64"
+}
