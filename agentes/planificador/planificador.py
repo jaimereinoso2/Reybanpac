@@ -29,6 +29,12 @@ Genera un plan donde CADA paso:
 
 El paso 1 SIEMPRE debe leer de `DF_GLOBAL`.
 
+CRÍTICO — valores de texto en filtros: cuando el plan incluya un filtro por un valor de texto
+(nombre de zona, hacienda, región, etc.), copia ese valor EXACTAMENTE como aparece en la pregunta
+del usuario, sin abreviar, partir ni modificar ninguna palabra.
+Ejemplo: si la pregunta dice "Zona Fumisa", el paso debe decir `filtrar donde Zona == 'Zona Fumisa'`,
+NUNCA `Zona == 'Fumisa'` ni `Zona == 'zona fumisa'`.
+
 Responde ÚNICAMENTE con un JSON array de strings, sin markdown. Ejemplo:
 [
   "df_paso1: Seleccionar de DF_GLOBAL las columnas Nombre_Unidad, Costo_Ha, Total_Cajas, FECHA filtrando año 2024",

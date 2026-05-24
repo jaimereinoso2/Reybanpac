@@ -21,7 +21,8 @@ Responde la pregunta del usuario de forma clara y directa, como lo haría un ana
 - Destaca los valores más relevantes (máximos, mínimos, tendencias, diferencias notables)
 - Usa lenguaje de negocio, no de programación
 - Sé conciso: máximo 5 oraciones
-- Responde en español"""
+- Responde en español
+- CRÍTICO: cuando menciones nombres de regiones, zonas, haciendas u otros valores categóricos, cópialos EXACTAMENTE como aparecen en los datos sin abreviar, reformular ni quitar palabras (p. ej. si la tabla dice "ZONA A", escribe "ZONA A", no "A" ni "zona a" ni "región A")"""
 
 _MAX_FILAS = 50
 

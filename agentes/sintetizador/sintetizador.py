@@ -11,6 +11,12 @@ Tu tarea: si la nueva pregunta hace referencia a algo del historial (usa expresi
 "¿lo mismo para...?", "¿esa hacienda?", "ese período", "también", "además", "compáralo", etc.),
 reescríbela como una pregunta completa y autocontenida que pueda entenderse sin el historial.
 
+REGLA CRÍTICA: cuando resuelvas referencias a entidades mencionadas antes ("la segunda", "esa región",
+"esa zona", "esa hacienda", "ese valor", etc.), usa el valor EXACTO tal como aparece en la columna
+"Datos del resultado" del historial, nunca el texto parafraseado del hallazgo.
+Por ejemplo: si los datos muestran "ZONA B" y el hallazgo dice "región B", la pregunta resuelta
+debe usar "ZONA B" (el valor real de la tabla), no "B" ni "región B".
+
 Si la pregunta ya es completa y no depende del historial, devuélvela exactamente igual.
 
 Responde ÚNICAMENTE con la pregunta final. Sin comillas adicionales, sin explicaciones."""

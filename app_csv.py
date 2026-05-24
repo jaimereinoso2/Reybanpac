@@ -690,7 +690,7 @@ elif nav == "consultas":
             with st.spinner("Interpretando resultados..."):
                 interpretacion = interpretar(pregunta_final, df_final)
 
-            agregar_interaccion(_sid, pregunta_final, interpretacion)
+            agregar_interaccion(_sid, pregunta_final, interpretacion, df=df_final)
 
             conversacion.append({
                 "pregunta_original": pregunta,

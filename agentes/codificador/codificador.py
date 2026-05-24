@@ -36,6 +36,7 @@ Reglas:
 - Si usas .groupby(), termina con .reset_index()
 - Si obtienes una Series, conviértela con .reset_index() o pd.DataFrame()
 - Para filtrar por mes usa `FECHA_mes` (int 1-12; octubre = 10, enero = 1, etc.); para filtrar por año usa `FECHA_ano` (int, ej. 2024); NO uses .dt.month ni .dt.year cuando estas columnas ya existen
+- CRÍTICO: cuando filtres por un valor de texto, usa EXACTAMENTE el string que aparece en "Valores únicos de columnas categóricas". Nunca abrevies, partas ni modifiques el valor. Si el catálogo muestra "Zona Fumisa", el filtro debe ser `== 'Zona Fumisa'`, jamás `== 'Fumisa'`
 - Solo pandas, sin imports adicionales
 - Sin markdown, sin backticks"""
 

@@ -50,14 +50,20 @@ def renombrar_sesion(sid: str, nuevo_nombre: str):
         _store["sesiones"][sid]["nombre"] = nuevo_nombre.strip() or _store["sesiones"][sid]["nombre"]
 
 
-def agregar_interaccion(sid: str, pregunta: str, interpretacion: str):
+def agregar_interaccion(sid: str, pregunta: str, interpretacion: str, df=None):
     sesion = _store["sesiones"].get(sid)
     if not sesion:
         return
 
+    datos_str = None
+    if df is not None and not df.empty:
+        raw = df.to_string(index=False, max_rows=25)
+        datos_str = raw[:2500] + "\n...(truncado)" if len(raw) > 2500 else raw
+
     sesion["interacciones"].append({
         "pregunta": pregunta,
         "interpretacion": interpretacion,
+        "datos": datos_str,
         "timestamp": datetime.now().isoformat(),
     })
 
@@ -89,10 +95,14 @@ def obtener_contexto(sid: str) -> str:
     if sesion.get("resumen"):
         partes.append(f"Resumen de preguntas anteriores en esta sesión:\n{sesion['resumen']}")
     if sesion["interacciones"]:
-        items = "\n".join(
-            f"{i+1}. Pregunta: \"{inter['pregunta']}\"\n"
-            f"   Hallazgo: {inter['interpretacion'][:200]}"
-            for i, inter in enumerate(sesion["interacciones"])
-        )
-        partes.append(f"Últimas preguntas en esta sesión:\n{items}")
+        bloques = []
+        for i, inter in enumerate(sesion["interacciones"]):
+            bloque = (
+                f"{i+1}. Pregunta: \"{inter['pregunta']}\"\n"
+                f"   Hallazgo: {inter['interpretacion'][:300]}"
+            )
+            if inter.get("datos"):
+                bloque += f"\n   Datos del resultado:\n{inter['datos']}"
+            bloques.append(bloque)
+        partes.append(f"Últimas preguntas en esta sesión:\n" + "\n\n".join(bloques))
     return "\n\n".join(partes)
